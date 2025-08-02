@@ -1,50 +1,50 @@
-version: "3"
-
 services:
-
   mongo:
-    image: mongo:4.4.2
+    image: mongo:8.0.11
     container_name: mongo-collectors
+    restart: unless-stopped
+    user: root
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - ./volumes/mongo/data:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: collectors
-      MONGO_INITDB_ROOT_PASSWORD: pa5sw0r4mdb
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: movies
     networks:
       - collectors-network
-    user: root
-    restart: unless-stopped
 
   influxdb:
-    image: influxdb:1.8
+    image: influxdb:1.11.8
     container_name: influxdb-collectors
+    restart: unless-stopped
+    user: root
     ports:
-      - 8086:8086
+      - 8087:8086
     volumes:
       - ./volumes/influxdb/data:/var/lib/influxdb
     environment:
       INFLUXDB_ADMIN_USER: collectors
-      INFLUXDB_ADMIN_PASSWORD: p4s5w0r4idb
+      INFLUXDB_ADMIN_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD}
       INFLUXDB_DB: collectorsDB
     networks:
       - collectors-network
-    user: root
-    restart: unless-stopped
 
   grafana:
-    image: grafana/grafana:10.0.8
+    image: grafana/grafana:10.4.19
     container_name: grafana-collectors
+    restart: unless-stopped
+    user: root
     ports:
-      - 3000:3000
+      - 3001:3000
     volumes:
       - ./volumes/grafana/data:/var/lib/grafana
     networks:
       - collectors-network
-    user: root
-    restart: unless-stopped
+    depends_on:
+      - mongo
+      - influxdb
 
 networks:
   collectors-network:

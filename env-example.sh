@@ -1,0 +1,8 @@
+# MongoDB
+export MONGO_INITDB_ROOT_PASSWORD=
+
+# InfluxDB
+export INFLUXDB_ADMIN_PASSWORD=
+
+# Grafana
+export GRAFANA_ADMIN_PASSWORD=
